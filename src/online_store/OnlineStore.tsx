@@ -33,11 +33,13 @@ const results = useQueries({
   ],
 });
 
-const productsinstore = results[0].data ?? [];
-const productsinbasket = results[1].data ?? [];
+const [productsinstore, setProductsInStore] = useState <Product[]>(results[0]?.data ?? []);
+const [productsinbasket, setProductsInBasket] = useState <Product[]>(results[1]?.data ?? []);
+//const productsinstore = results[0].data ?? [];
+//const productsinbasket = results[1].data ?? [];
 const isLoading = results.some(result => result.isLoading);
 
-const createBasketMutation = useMutation<Product, Error, AddProductInBasketDto>({  //здесь происходит измениение спика задач
+const createBasketMutation = useMutation<Product, Error, AddProductInBasketDto>({  //здесь происходит измениение спика продуктов
     mutationFn: addProductsInBasket,
     onSuccess: (addProductsInBasket) => {
         queryClient.setQueryData<Product[]>(['productsinbasket'], (current = []) => [...current, addProductsInBasket])

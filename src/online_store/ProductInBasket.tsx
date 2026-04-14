@@ -26,7 +26,7 @@ export const ProductInBasket: React.FC<ProductInBasketProps> =
             console.log(JSON.stringify(product, null, 2));
           }}
           sx={{
-              bgcolor: product.id === selectedProductInBasketId ? "rgba(191, 240, 243, 0.35)" : "transparent",
+              bgcolor: product.id === selectedProductInBasketId ? "rgba(243, 191, 191, 0.35)" : "transparent",
               "&:hover": {
               bgcolor: "rgb(243, 194, 191)",
               cursor: "pointer"

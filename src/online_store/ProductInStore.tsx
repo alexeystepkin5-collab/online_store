@@ -26,7 +26,7 @@ export const ProductInStore: React.FC<ProductInStoreProps> =
             onSelectedProductInStoreId(product.id);
           }}
           sx={{
-              bgcolor: product.id === selectedProductInStoreId ? "rgba(191, 240, 243, 0.35)" : "transparent",
+              bgcolor: product.id === selectedProductInStoreId ? "rgba(243, 191, 191, 0.35)" : "transparent",
               "&:hover": {
               bgcolor: "rgb(243, 194, 191)",
               cursor: "pointer"
