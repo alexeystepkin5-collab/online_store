@@ -5,13 +5,13 @@ import type { Product } from "../types";
 
 interface ProductInBasketProps {
     productsinbasket: Product[]
-    onAddProductsInBasket: (product: Product) => void
+    onProductsInBasket: (products: Product[]) => void
     selectedProductInBasketId: number | null
     onSelectedProductInBasketId: (id: number) => void
 }
 
 export const ProductInBasket: React.FC<ProductInBasketProps> =
- ({productsinbasket, onAddProductsInBasket,  selectedProductInBasketId, onSelectedProductInBasketId }) => {
+ ({productsinbasket, onProductsInBasket,  selectedProductInBasketId, onSelectedProductInBasketId }) => {
  
   return (
       <Stack direction="column" spacing={1}>

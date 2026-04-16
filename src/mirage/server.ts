@@ -65,8 +65,36 @@ export function makeServer() {
         id: 6,
         title: "капуста",
         description: "превосходная хрустящая капуста",
-        price: 100,
-        quantity: 1400
+        price: 50,
+        quantity: 140
+      },
+      {
+        id: 7,
+        title: "огурцы",
+        description: "свежий урожай Хомутоские",
+        price: 200,
+        quantity: 400
+      },
+      {
+        id: 8,
+        title: "помидоры",
+        description: "спелые тепличные",
+        price: 150,
+        quantity: 500
+      },
+      {
+        id: 9,
+        title: "чеснок",
+        description: "жгучий ядреный",
+        price: 30,
+        quantity: 150
+      },
+      {
+        id: 10,
+        title: "говядина",
+        description: "свежая мраморная",
+        price: 600,
+        quantity: 140
       }
 
       ]

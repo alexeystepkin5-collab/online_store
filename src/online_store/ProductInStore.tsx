@@ -4,7 +4,7 @@ import type { Product } from "../types";
 
 interface ProductInStoreProps {
     productsinstore: Product[]
-    onProductsInStore: (product: Product) => void
+    onProductsInStore: (products: Product[]) => void
     selectedProductInStoreId: number | null
     onSelectedProductInStoreId: (id: number) => void
 }
@@ -24,6 +24,7 @@ export const ProductInStore: React.FC<ProductInStoreProps> =
           spacing={1}
           onClick={() => {
             onSelectedProductInStoreId(product.id);
+            //console.log(JSON.stringify(product, null, 2));
           }}
           sx={{
               bgcolor: product.id === selectedProductInStoreId ? "rgba(243, 191, 191, 0.35)" : "transparent",

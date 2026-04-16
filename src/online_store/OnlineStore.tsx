@@ -29,27 +29,29 @@ const queryClient = useQueryClient();
 const results = useQueries({
   queries: [
     { queryKey: ['productsinstore'], queryFn: getProductsInStore },
-    { queryKey: ['productsinbasket'], queryFn: getProductsInBasket },
+    //{ queryKey: ['productsinbasket'], queryFn: getProductsInBasket },
   ],
 });
 
-const [productsinstore, setProductsInStore] = useState <Product[]>(results[0]?.data ?? []);
-const [productsinbasket, setProductsInBasket] = useState <Product[]>(results[1]?.data ?? []);
-//const productsinstore = results[0].data ?? [];
+
+const productsinstore = results[0].data ?? [];
 //const productsinbasket = results[1].data ?? [];
 const isLoading = results.some(result => result.isLoading);
 
-const createBasketMutation = useMutation<Product, Error, AddProductInBasketDto>({  //здесь происходит измениение спика продуктов
+const createBasketMutation = useMutation<Product, Error, AddProductInBasketDto>({  //здесь происходит измениение спика продуктов в корзине и отправка на сервер
     mutationFn: addProductsInBasket,
     onSuccess: (addProductsInBasket) => {
         queryClient.setQueryData<Product[]>(['productsinbasket'], (current = []) => [...current, addProductsInBasket])
     },
 })
 
+const [productstobasket, setProductsToBasket] = useState <Product[]>([]);
 
 const [selectedProductInStoreId, setSelectedProductInStoreId] = useState<number | null>(null);
 const [selectedProductInBasketId, setSelectedProductInBasketId] = useState<number | null>(null);
 const selectedProduct = productsinstore.find(Product => Product.id === selectedProductInStoreId)
+const totalCost = productstobasket.reduce((sum, product) => sum + product.price * product.quantity, 0);
+
 const [openDialog, setOpenDialog] = useState(false);
 
     return (
@@ -67,11 +69,12 @@ const [openDialog, setOpenDialog] = useState(false);
                     borderRadius: '16px',      // Закругление углов (опционально)
                     padding: '16px',          // Внутренний отступ
                 }}>
-                <Typography variant="h5">{"Стоимость корзины"}</Typography>
+                <Typography variant="h5">{"Стоимость корзины: "}</Typography>
+                <Typography variant="h5">{totalCost}</Typography>
                  <Button
                     variant="outlined"
                     size="small"
-                    onClick={() => console.log(JSON.stringify(productsinbasket, null, 2))}
+                    onClick={() => console.log(JSON.stringify(productstobasket, null, 2))}
                 >
                     Оформить заказ
                 </Button>
@@ -88,10 +91,29 @@ const [openDialog, setOpenDialog] = useState(false);
                     open={openDialog}
                     onClose={() => setOpenDialog(false)}
                     addproduct={selectedProduct!}
+                    // onAdd={(newProduct) => {
+                    //     createBasketMutation.mutateAsync({...newProduct})
+                    //     //console.log(JSON.stringify(newProduct, null, 2));
+                    // }}
+                    // onAdd={(newProduct) => {
+                    //         setProductsToBasket([...productstobasket, newProduct])
+                    // }}
                     onAdd={(newProduct) => {
-                        //onAddProductsInBasket( {...newProduct} )
-                        //console.log(JSON.stringify(newProduct, null, 2));
-                        createBasketMutation.mutateAsync({...newProduct})
+                        
+                        if (
+                        !productstobasket.some(newProduct => newProduct.id === selectedProductInStoreId)) {
+                            //console.log('В магазине выбран ', JSON.stringify(selectedProduct, null, 2));
+                            //console.log('Новый продукт ', JSON.stringify(newProduct, null, 2));
+                            setProductsToBasket([...productstobasket, newProduct]);
+
+                        } else {
+                            //console.log('товар уже добавлен', selectedProductInStoreId); // эта часть — «иначе»
+                            setProductsToBasket(prev => 
+                                prev.map(Product => Product.id === selectedProductInStoreId ? { ...newProduct } : Product)
+                            )
+                            
+                        }
+
                     }}
                 />
 
@@ -110,8 +132,8 @@ const [openDialog, setOpenDialog] = useState(false);
                         {!isLoading && <Typography variant="h5">{"Ассортимент товаров"}</Typography>}
                         {isLoading && <Typography>Загрузка...</Typography>}
                         {!isLoading &&<ProductInStore 
-                            productsinstore={productsinstore!}
-                            onProductsInStore={()=>('') }
+                            productsinstore={productsinstore}
+                            onProductsInStore={()=>('')}
                             selectedProductInStoreId={selectedProductInStoreId}
                             onSelectedProductInStoreId={(id) => setSelectedProductInStoreId(id)}
                         />}
@@ -131,8 +153,8 @@ const [openDialog, setOpenDialog] = useState(false);
                         {!isLoading &&<Typography variant="h5">{"Моя корзина"}</Typography>}
                         {isLoading && <Typography>Загрузка...</Typography>}
                         {!isLoading &&<ProductInBasket
-                            productsinbasket={productsinbasket!}
-                            onAddProductsInBasket={()=>('') }//{(addProduct) => createBasketMutation.mutateAsync({...addProduct})}
+                            productsinbasket={productstobasket}
+                            onProductsInBasket={()=>('')}//{(addProduct) => createBasketMutation.mutateAsync({...addProduct})}
                             selectedProductInBasketId={selectedProductInBasketId}
                             onSelectedProductInBasketId={(id)=>setSelectedProductInBasketId(id)}
                         />}
