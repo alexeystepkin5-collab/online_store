@@ -86,6 +86,13 @@ export function makeServer() {
         description: "свежая мраморная",
         price: 600,
         quantity: 140
+      },
+      {
+        id: 11,
+        title: "хлеб",
+        description: "пшеничный хлеб высшего сорта",
+        price: 60,
+        quantity: 300
       }
 
       ]

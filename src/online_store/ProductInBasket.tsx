@@ -21,7 +21,6 @@ export const ProductInBasket: React.FC<ProductInBasketProps> =
           spacing={1}
           onClick={() => {
             onSelectedProductInBasketId(product.id);
-            console.log(JSON.stringify(product, null, 2));
           }}
           sx={{
               bgcolor: product.id === selectedProductInBasketId ? "rgba(243, 191, 191, 0.35)" : "transparent",

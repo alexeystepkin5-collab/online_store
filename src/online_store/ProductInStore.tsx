@@ -12,9 +12,7 @@ export const ProductInStore: React.FC<ProductInStoreProps> =
  ({productsinstore, selectedProductInStoreId, onSelectedProductInStoreId}) => {
 
   return (
-      <Stack direction="column" spacing={1}>
-                
-
+      <Stack direction="column" spacing={1}>               
       {productsinstore.map(product => (
         <Stack
           justifyContent="space-between" 
