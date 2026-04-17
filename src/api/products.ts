@@ -1,6 +1,6 @@
 import type { Product } from '../types'
 
-export type AddProductInBasketDto = Omit<Product, 'id'>
+export type AddProductInBasketDto = Product
 
 
 
@@ -24,7 +24,7 @@ export async function getProductsInStore(): Promise<Product[]> {
   return response.json() as Promise<Product[]>
 }
 
-export async function addProductsInBasket(payload: AddProductInBasketDto): Promise<Product> {
+export async function addProductsInBasket(payload: AddProductInBasketDto[]): Promise<Product[]> {
   const response = await fetch('/api/basket', {
     method: 'POST',
     headers: {
@@ -37,5 +37,6 @@ export async function addProductsInBasket(payload: AddProductInBasketDto): Promi
     throw new Error(`Не удалось добавить товар в корзину: ${response.status}`)
   }
 
-  return response.json() as Promise<Product>
+  return response.json() as Promise<Product[]>;
+  
 }

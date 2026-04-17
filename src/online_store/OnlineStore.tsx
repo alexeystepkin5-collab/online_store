@@ -10,7 +10,7 @@
 import type React from "react";
 import { useMutation, useQueries, useQueryClient } from "@tanstack/react-query"
 import type { Product } from "../types";
-import { addProductsInBasket, getProductsInBasket, getProductsInStore, type AddProductInBasketDto } from "../api/products"
+import { addProductsInBasket, getProductsInStore, type AddProductInBasketDto } from "../api/products"
 import { Box, Button, Stack, Typography } from "@mui/material";
 import { ProductInStore } from "./ProductInStore";
 import { ProductInBasket } from "./ProductInBasket";
@@ -38,10 +38,10 @@ const productsinstore = results[0].data ?? [];
 //const productsinbasket = results[1].data ?? [];
 const isLoading = results.some(result => result.isLoading);
 
-const createBasketMutation = useMutation<Product, Error, AddProductInBasketDto>({  //здесь происходит измениение спика продуктов в корзине и отправка на сервер
+const createBasketMutation = useMutation<Product[], Error, AddProductInBasketDto[]>({  //здесь происходит измениение спика продуктов в корзине и отправка на сервер
     mutationFn: addProductsInBasket,
     onSuccess: (addProductsInBasket) => {
-        queryClient.setQueryData<Product[]>(['productsinbasket'], (current = []) => [...current, addProductsInBasket])
+        queryClient.setQueryData<Product[]>(['productsinbasket'], addProductsInBasket)
     },
 })
 
@@ -74,7 +74,9 @@ const [openDialog, setOpenDialog] = useState(false);
                  <Button
                     variant="outlined"
                     size="small"
-                    onClick={() => console.log(JSON.stringify(productstobasket, null, 2))}
+                    onClick={() => {
+                         createBasketMutation.mutateAsync(productstobasket)
+                     }}
                 >
                     Оформить заказ
                 </Button>
@@ -91,23 +93,15 @@ const [openDialog, setOpenDialog] = useState(false);
                     open={openDialog}
                     onClose={() => setOpenDialog(false)}
                     addproduct={selectedProduct!}
-                    // onAdd={(newProduct) => {
-                    //     createBasketMutation.mutateAsync({...newProduct})
-                    //     //console.log(JSON.stringify(newProduct, null, 2));
-                    // }}
-                    // onAdd={(newProduct) => {
-                    //         setProductsToBasket([...productstobasket, newProduct])
-                    // }}
                     onAdd={(newProduct) => {
                         
                         if (
                         !productstobasket.some(newProduct => newProduct.id === selectedProductInStoreId)) {
-                            //console.log('В магазине выбран ', JSON.stringify(selectedProduct, null, 2));
-                            //console.log('Новый продукт ', JSON.stringify(newProduct, null, 2));
+
                             setProductsToBasket([...productstobasket, newProduct]);
 
                         } else {
-                            //console.log('товар уже добавлен', selectedProductInStoreId); // эта часть — «иначе»
+                            
                             setProductsToBasket(prev => 
                                 prev.map(Product => Product.id === selectedProductInStoreId ? { ...newProduct } : Product)
                             )
@@ -133,7 +127,6 @@ const [openDialog, setOpenDialog] = useState(false);
                         {isLoading && <Typography>Загрузка...</Typography>}
                         {!isLoading &&<ProductInStore 
                             productsinstore={productsinstore}
-                            onProductsInStore={()=>('')}
                             selectedProductInStoreId={selectedProductInStoreId}
                             onSelectedProductInStoreId={(id) => setSelectedProductInStoreId(id)}
                         />}
@@ -154,7 +147,6 @@ const [openDialog, setOpenDialog] = useState(false);
                         {isLoading && <Typography>Загрузка...</Typography>}
                         {!isLoading &&<ProductInBasket
                             productsinbasket={productstobasket}
-                            onProductsInBasket={()=>('')}//{(addProduct) => createBasketMutation.mutateAsync({...addProduct})}
                             selectedProductInBasketId={selectedProductInBasketId}
                             onSelectedProductInBasketId={(id)=>setSelectedProductInBasketId(id)}
                         />}

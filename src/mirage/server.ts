@@ -1,9 +1,9 @@
 import { createServer, Model } from 'miragejs'
 import type { Product } from '../types'
 
-type ProductInBasketPayload = Omit<Product, 'id'>
+type ProductInBasketPayload = Product
 
-let nextProductInBasketId = 5
+//let nextProductInBasketId = 11
 
 export function makeServer() {
   return createServer({
@@ -13,16 +13,7 @@ export function makeServer() {
     },
 
     seeds(server: any) {
-      const seedProductsInBasket: Product[] = [
-      // {
-      //   id: 1,
-      //   title: "перловка",
-      //   description: "отборная ячменная крупа",
-      //   price: 150,
-      //   quantity: 5
-      // }
-
-      ]
+      const seedProductsInBasket: Product[] = []
       seedProductsInBasket.forEach((product) => server.create('productinbasket', product))
       
       const seedProductsInStore: Product[] = [
@@ -119,16 +110,10 @@ export function makeServer() {
 
       // POST /api/basket {данные нового товара в корзине} -> создаёт задачу и отдаёт её с новым id
       this.post('/basket', (schema: any, request: any) => {
-        const payload = JSON.parse(request.requestBody) as ProductInBasketPayload
+        const payload = JSON.parse(request.requestBody) as ProductInBasketPayload[]
 
-        const newProductInBasket: Product = {
-          id: nextProductInBasketId,
-          ...payload,
-        }
-        nextProductInBasketId += 1
-
-        const record = schema.create('productinbasket', newProductInBasket)
-        return record.attrs as Product
+        const record = schema.create('productinbasket', payload)
+        return record.attrs as Product[]
       })
     },
   })

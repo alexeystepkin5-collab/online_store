@@ -4,13 +4,12 @@ import type { Product } from "../types";
 
 interface ProductInStoreProps {
     productsinstore: Product[]
-    onProductsInStore: (products: Product[]) => void
     selectedProductInStoreId: number | null
     onSelectedProductInStoreId: (id: number) => void
 }
 
 export const ProductInStore: React.FC<ProductInStoreProps> =
- ({productsinstore, onProductsInStore, selectedProductInStoreId, onSelectedProductInStoreId}) => {
+ ({productsinstore, selectedProductInStoreId, onSelectedProductInStoreId}) => {
 
   return (
       <Stack direction="column" spacing={1}>
@@ -24,7 +23,6 @@ export const ProductInStore: React.FC<ProductInStoreProps> =
           spacing={1}
           onClick={() => {
             onSelectedProductInStoreId(product.id);
-            //console.log(JSON.stringify(product, null, 2));
           }}
           sx={{
               bgcolor: product.id === selectedProductInStoreId ? "rgba(243, 191, 191, 0.35)" : "transparent",
@@ -35,7 +33,6 @@ export const ProductInStore: React.FC<ProductInStoreProps> =
           }}
         >
           <Typography variant="h4">{product.title}</Typography>
-          {/* <Typography variant="subtitle1">{product.description}</Typography> */}
           <Typography variant="subtitle1">{product.price}</Typography>
           <Typography variant="subtitle1">{product.quantity}</Typography>
         </Stack>

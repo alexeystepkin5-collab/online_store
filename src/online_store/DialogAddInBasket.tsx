@@ -17,7 +17,7 @@ interface DialogAddInBasketProps {
   open: boolean;
   onClose: () => void;
   addproduct: Product;
-  onAdd:  (addproduct: Product) => void;//(addproduct: Omit<Product, 'id'>) => void;
+  onAdd:  (addproduct: Product) => void;
 }
 
 export const DialogAddInBasket: React.FC<DialogAddInBasketProps> = ({
@@ -32,7 +32,6 @@ export const DialogAddInBasket: React.FC<DialogAddInBasketProps> = ({
   const [price, setPrice] = useState(0);
   const [quantity, setQuantity] = useState(0);
   const [maxquantity, setMaxQuantity] = useState(0);
-  const [cost, setCost] = useState(0);
 
   
   const handleOpenDialog = () => {
@@ -42,7 +41,6 @@ export const DialogAddInBasket: React.FC<DialogAddInBasketProps> = ({
     setPrice(addproduct.price);
     setQuantity(quantity);
     setMaxQuantity(addproduct.quantity);
-    setCost(price*quantity);
   };
 
   const handleSubmit = () => {
@@ -67,11 +65,8 @@ export const DialogAddInBasket: React.FC<DialogAddInBasketProps> = ({
     setDescription('');
     setPrice(0);
     setQuantity(0);
-    setCost(0);
     onClose();
   };
-
-  //const [value, setValue] = useState('');
 
   return (
     
@@ -83,7 +78,6 @@ export const DialogAddInBasket: React.FC<DialogAddInBasketProps> = ({
       slotProps={{
         transition: { onEntered: () => {
         handleOpenDialog()
-        //console.log("Выбранный товар", addproduct.title );
         }}
       }}
       >
