@@ -75,8 +75,11 @@ const [openDialog, setOpenDialog] = useState(false);
                     variant="outlined"
                     size="small"
                     onClick={() => {
-                         createBasketMutation.mutateAsync(productstobasket)
-                     }}
+                         createBasketMutation.mutateAsync(productstobasket);
+                         setProductsToBasket([]);
+                        }
+                        
+                    }
                 >
                     Оформить заказ
                 </Button>
